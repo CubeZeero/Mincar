@@ -5,15 +5,10 @@
 # Mincar
 Mincarは同人音楽作品専用のカバーアートデータベースです
 
-<br>
-
 ## 使用方法
+こちらのNotionページを御覧ください
 
-<br>
-
-## Build
-
-<br>
+https://cubezeero.notion.site/Mincar-fa40bb8295074f67b9b6f8ffde1313e7
 
 ## LICENSE
 [GNU Lesser General Public License v3.0](https://github.com/CubeZeero/Mincar/blob/main/LICENSE)
