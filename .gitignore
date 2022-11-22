@@ -135,3 +135,5 @@ version.py
 tests/discid
 build
 tests
+Readme.txt
+dist

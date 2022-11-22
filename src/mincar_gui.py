@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# M2CA-Linker
+# Mincar
 # mincar_gui.py
 # (C) 2022 Cube
 # cubezeero@gmail.com
@@ -95,8 +95,9 @@ home_window = window_layout.lo_home_window(icon_io_list, menu_button_bgcolor, wi
 while True:
     home_event, home_values = home_window.read()
 
-    if home_event == psg.WIN_CLOSED:
-        break
+    if home_event == psg.WIN_CLOSED : break
+
+    if home_event == '-htu_btn-' : webbrowser.open('https://cubezeero.notion.site/cubezeero/Mincar-fa40bb8295074f67b9b6f8ffde1313e7')
 
 
     #---------------------------------------------------------------------------------

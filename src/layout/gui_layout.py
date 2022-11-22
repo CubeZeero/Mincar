@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# Mincar
+# gui_layout.py
+# (C) 2022 Cube
+# cubezeero@gmail.com
+
 class window_layout:
 
     def __init__(self, psg, window_title, icon_path):

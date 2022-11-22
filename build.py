@@ -5,6 +5,15 @@ import shutil
 import subprocess
 import json
 
+from src import version 
+
+version = version.VERSION()
+
+print('Pack for distribution? [y/n]')
+while True:
+    pack_yn = input('Enter: ')
+    if pack_yn == 'y' or  pack_yn == 'n' : break
+
 if os.path.isdir('build') : shutil.rmtree('build')
 
 shutil.copytree('src', 'build')
@@ -33,5 +42,17 @@ general_setting_dict = {
 
 with open('build/mincar_data/setting.json', 'w', encoding = 'UTF-8') as file:
     json.dump(general_setting_dict, file, ensure_ascii = False, indent = 4)
+
+with open('build/Readme.txt', encoding = 'UTF-8') as rm_reader:
+    rm_text = rm_reader.read().replace(r'{version}', version)
+
+with open('build/Readme.txt', 'w', encoding = 'UTF-8') as rm_writer:
+    rm_writer.write(rm_text)
+
+if pack_yn == 'y':
+    if os.path.isdir('dist/Mincar_' + version) : shutil.rmtree('dist/Mincar_' + version)
+    if os.path.isfile('dist/Mincar_' + version + '.zip') : os.remove('dist/Mincar_' + version + '.zip')
+    shutil.copytree('build', 'dist/Mincar_' + version)
+    shutil.make_archive('dist/Mincar_' + version, 'zip', root_dir = 'dist/Mincar_' + version)
 
 print('\nComplete!')

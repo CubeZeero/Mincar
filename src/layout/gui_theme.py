@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# Mincar
+# gui_theme.py
+# (C) 2022 Cube
+# cubezeero@gmail.com
+
 def white(sg):
 
     white = {
