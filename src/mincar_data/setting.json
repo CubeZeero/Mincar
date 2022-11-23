@@ -1,5 +1,6 @@
 {
     "themename": "Light",
     "editkey": "",
-    "savefolder": ""
+    "savefolder": "",
+    "start_update_check": 1
 }

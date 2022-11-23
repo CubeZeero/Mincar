@@ -37,7 +37,8 @@ os.remove('build/version.py')
 general_setting_dict = {
     'themename': 'Light',
     'editkey': '',
-    'savefolder': ''
+    'savefolder': '',
+    'start_update_check': 1
 }
 
 with open('build/mincar_data/setting.json', 'w', encoding = 'UTF-8') as file:

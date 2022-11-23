@@ -137,3 +137,4 @@ build
 tests
 Readme.txt
 dist
+latest_version.db

@@ -273,26 +273,29 @@ class window_layout:
 
         setting_general_frame = [
 
-                [self.psg.Text(text = 'テーマ (再起動時に適用されます)', font = ['Meiryo',8], pad = ((0,0),(110,0))),
-                 self.psg.Combo(setting_theme_list, default_value = general_setting_dict['themename'], font = ['Meiryo',8], size = (12,1), pad = ((10,0),(110,0)), readonly = True, key = '-theme_combo-')],
+                [self.psg.Text(text = 'テーマ (再起動時に適用されます)', font = ['Meiryo',8], pad = ((0,0),(90,0))),
+                 self.psg.Combo(setting_theme_list, default_value = general_setting_dict['themename'], font = ['Meiryo',8], size = (12,1), pad = ((10,0),(90,0)), readonly = True, key = '-theme_combo-')],
 
                 [self.psg.Text(text = 'デフォルトの編集キー', font = ['Meiryo',8], pad = ((0,0),(15,0))),
                  self.psg.Input(default_text = general_setting_dict['editkey'], size = (24,1), pad = ((10,0),(13,0)), key = '-default_editkey_input-')],
 
                 [self.psg.Text(text = '保存先を指定', font = ['Meiryo',8], pad = ((0,0),(30,0)))],
                 [self.psg.Input(default_text = general_setting_dict['savefolder'], size = (40,1), pad = ((0,0),(5,0)), key = '-get_folder_input-')],
-                [self.psg.Button(button_text = '参照', font = ['Meiryo',8], size = (8,1), pad = ((0,0),(10,0)), key = '-get_folder_btn-')]
+                [self.psg.Button(button_text = '参照', font = ['Meiryo',8], size = (8,1), pad = ((0,0),(10,0)), key = '-get_folder_btn-')],
+
+                [self.psg.Checkbox(text = '起動時に自動でアップデートを確認する', default = bool(general_setting_dict['start_update_check']), font = ['Meiryo',8], auto_size_text = True, pad = ((0,0),(30,0)), key = '-start_update_check-')]
 
                 ]
 
         setting_info_frame = [
 
-                [self.psg.Image(filename = 'mincar_data/img/mincar_logo_info.png', pad = ((0,0),(80,5)))],
+                [self.psg.Image(filename = 'mincar_data/img/mincar_logo_info.png', pad = ((0,0),(65,5)))],
                 [self.psg.Text(text = window_title_raw, font = ['Meiryo',12], pad = ((0,0),(10,0)))],
                 [self.psg.Text(text = 'version ' + software_version, font = ['Meiryo',8], pad = ((0,0),(2,0)))],
                 [self.psg.Text(text = 'Developed by Cube', font = ['Meiryo',10], pad = ((0,0),(10,0)))],
                 [self.psg.Text(text = library_list, font = ['Meiryo',8], pad = ((0,0),(10,0)))],
-                [self.psg.Text(text = 'https://github.com/CubeZeero/M2CA-Linker', enable_events = True, font = ['Meiryo',8,'underline'], pad = ((0,0),(10,0)), key = '-homepage-')],
+                [self.psg.Text(text = 'https://github.com/CubeZeero/Mincar', enable_events = True, font = ['Meiryo',8,'underline'], pad = ((0,0),(10,0)), key = '-homepage-')],
+                [self.psg.Button(button_text = 'アップデートの確認', font = ['Meiryo',8], size = (24,1), pad = ((0,0),(20,0)), key = '-update_check_btn-')]
 
                 ]
 

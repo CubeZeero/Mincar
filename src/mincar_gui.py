@@ -53,6 +53,7 @@ with open('mincar_data/setting.json', encoding = 'UTF-8') as file:
 gs_theme_name = general_setting_dict['themename']
 gs_default_editkey = general_setting_dict['editkey']
 gs_default_savefolder = general_setting_dict['savefolder']
+gs_startupdate_check = bool(general_setting_dict['start_update_check'])
 
 psg.LOOK_AND_FEEL_TABLE['theme'] = gui_theme.white(psg) if gs_theme_name == 'Light' else gui_theme.dark(psg)
 
@@ -83,6 +84,14 @@ else:
         icon_io_list.append(util.imageInvertColor(Image, ImageOps, io, iconpath))
 
 window_layout = gui_layout.window_layout(psg, window_title, icon_path)
+
+if gs_startupdate_check:
+    aws_s3_response = aws_s3_client.get_object(Bucket = aws_info_bn, Key = '00_latest_software_vesion/latest_version.db')
+    update_info = json.loads(aws_s3_response["Body"].read())
+
+    if update_info['version'] != software_version:
+        if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + software_version + '\n最新バージョン: v' + update_info['version'] + '\n\n最新バージョンをダウンロードしますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
+            webbrowser.open(update_info['url'])
 
 #---------------------------------------------------------------------------------
 
@@ -115,7 +124,7 @@ while True:
 
         cancel_sw = 0
 
-        psg.popup_ok('カバーアートの登録は著作権者(作曲者)本人による登録を推奨します\n\nまた本データベースは「同人音楽作品」専用のデータベースです\nメジャー作品などの一般流通作品の登録はお控えください', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
+        psg.popup_ok('カバーアートの登録は著作権者(作曲者)本人による登録を推奨します\n\nまた本データベースは「同人音楽作品」専用です\nメジャー作品などの一般流通作品の登録はお控えください', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
 
         try:
             current_disc_info = discid.read()
@@ -638,17 +647,30 @@ while True:
                 if coverart_path != '' : setting_window['-get_folder_input-'].update(value = coverart_path)
                 
             if setting_event == '-homepage-':
-                webbrowser.open('https://github.com/CubeZeero/M2CA-Linker')
+                webbrowser.open('https://github.com/CubeZeero/Mincar')
+            
+            if setting_event == '-update_check_btn-':
+                aws_s3_response = aws_s3_client.get_object(Bucket = aws_info_bn, Key = '00_latest_software_vesion/latest_version.db')
+                update_info = json.loads(aws_s3_response["Body"].read())
+
+                if update_info['version'] != software_version:
+                    if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + software_version + '\n最新バージョン: v' + update_info['version'] + '\n\n最新バージョンをダウンロードしますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
+                        webbrowser.open(update_info['url'])
+                
+                else:
+                    psg.popup_ok('お使いのMincarは最新バージョンです', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
             
             if setting_event == '-ok_btn-':
                 gs_theme_name = setting_values['-theme_combo-']
                 gs_default_editkey = setting_values['-default_editkey_input-']
                 gs_default_savefolder = setting_values['-get_folder_input-']
+                gs_startupdate_check = int(setting_values['-start_update_check-'])
 
                 general_setting_dict = {
                     'themename': gs_theme_name,
                     'editkey': gs_default_editkey,
-                    'savefolder': gs_default_savefolder
+                    'savefolder': gs_default_savefolder,
+                    'start_update_check': gs_startupdate_check
                 }
 
                 with open('mincar_data/setting.json', 'w', encoding = 'UTF-8') as file:
