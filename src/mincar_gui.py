@@ -22,11 +22,13 @@ import os
 import datetime
 import webbrowser
 import json
+from packaging.version import Version, parse
 
 import aws_info
 import version
 from layout import gui_layout, gui_theme
 import util
+import mgun
 
 #---------------------------------------------------------------------------------
 
@@ -43,7 +45,8 @@ aws_s3_client = boto3.client('s3', aws_access_key_id = aws_info_ak, aws_secret_a
 
 software_version = version.VERSION()
 window_title_raw = 'Mincar'
-window_title = 'Mincar v' + software_version
+version_all = software_version[0] + software_version[1] + software_version[2]
+window_title = 'Mincar v' + version_all
 
 icon_path = 'mincar_data/img/mincar_logo.ico'
 
@@ -63,6 +66,7 @@ icon_path_list = ['mincar_data/img/button_icon/button_icon_upload.png',
                   'mincar_data/img/button_icon/button_icon_download.png',
                   'mincar_data/img/button_icon/button_icon_edit.png',
                   'mincar_data/img/button_icon/button_icon_detail.png',
+                  'mincar_data/img/button_icon/button_icon_editkeyloss.png',
                   'mincar_data/img/button_icon/button_icon_setting.png']
 
 icon_io_list = []
@@ -89,8 +93,9 @@ if gs_startupdate_check:
     aws_s3_response = aws_s3_client.get_object(Bucket = aws_info_bn, Key = '00_latest_software_vesion/latest_version.db')
     update_info = json.loads(aws_s3_response["Body"].read())
 
-    if update_info['version'] != software_version:
-        if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + software_version + '\n最新バージョン: v' + update_info['version'] + '\n\n最新バージョンをダウンロードしますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
+    if parse(update_info['version']) > parse(software_version[0]):
+        update_info_all = update_info['version'] + update_info['version_space'] + update_info['version_prerelease']
+        if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + version_all + '\n最新バージョン: v' + update_info_all + '\n\n最新バージョンをダウンロードしますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
             webbrowser.open(update_info['url'])
 
 #---------------------------------------------------------------------------------
@@ -209,7 +214,7 @@ while True:
                         else:
                             if psg.popup_yes_no('このカバーアートを登録しますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
                                 registration_data_name = current_disc_info.id + '/' + disctitle_sp + '/' + upload_values['-coverartname_input-'] + '.jpg'
-                                aws_s3_client.upload_file(coverart_path, aws_info_bn, registration_data_name, ExtraArgs = {"Metadata":{"edit-key": upload_values['-editkey_input-']}})
+                                aws_s3_client.upload_file(coverart_path, aws_info_bn, registration_data_name, ExtraArgs = {"Metadata":{"edit-key": upload_values['-editkey_input-'], "mgun": mgun.mgun()}})
 
                                 psg.popup_ok('カバーアートの登録が完了しました', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
 
@@ -613,6 +618,45 @@ while True:
         except discid.DiscError:
             psg.popup_ok('ディスクの読み込み時にエラーが発生しました\nディスク本体が挿入されているか確認してください', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
 
+    
+    #---------------------------------------------------------------------------------
+
+    # Editkey Loss Window
+
+    #---------------------------------------------------------------------------------
+
+
+    if home_event == '-menu_editkeyloss_btn-':
+            
+        editkeyloss_window = window_layout.lo_editkeyloss_window()
+
+        while True:
+            editkeyloss_event, editkeyloss_values = editkeyloss_window.read()
+
+            if editkeyloss_event == psg.WIN_CLOSED or editkeyloss_event == '-cancel_btn-' : break
+
+            if editkeyloss_event == '-ok_btn-':
+                if editkeyloss_values['-ekl_discid_input-'] == '' or editkeyloss_values['-ekl_title_input-'] == '' or editkeyloss_values['-ekl_email_input-'] == '':
+                    psg.popup_ok('未入力の項目があります', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
+                
+                elif psg.popup_yes_no('このフォームを送信しますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
+                    ekl_form_dict = {
+                        'discid': str(editkeyloss_values['-ekl_discid_input-']),
+                        'disctitle': str(editkeyloss_values['-ekl_title_input-']),
+                        'catype': str(editkeyloss_values['-ekl_catype_input-']),
+                        'email': str(editkeyloss_values['-ekl_email_input-']),
+                        "mgun": mgun.mgun()
+                    }
+
+                    ekl_key_name = '01_ekl_form_data/' + editkeyloss_values['-ekl_discid_input-'].replace('/','_') + '-' + editkeyloss_values['-ekl_title_input-'].replace('/','_') + '-' + editkeyloss_values['-ekl_catype_input-'].replace('/','_') + '.db'
+
+                    aws_s3_client.put_object(Body = json.dumps(ekl_form_dict, ensure_ascii = False, indent = 4), Bucket = aws_info_bn, Key = ekl_key_name)
+
+                    psg.popup_ok('フォームの送信が完了しました', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
+                    break
+
+        editkeyloss_window.close()
+
 
     #---------------------------------------------------------------------------------
 
@@ -627,7 +671,7 @@ while True:
         setting_theme_list = ['Light', 'Dark']
         library_list = 'boto3,pysimplegui,libdiscid,python-discid,pyperclip,pillow'
 
-        setting_window = window_layout.lo_setting_window(window_title_raw, software_version, setting_menu_list, library_list, setting_theme_list, general_setting_dict)
+        setting_window = window_layout.lo_setting_window(window_title_raw, version_all, setting_menu_list, library_list, setting_theme_list, general_setting_dict)
 
         while True:
             setting_event, setting_values = setting_window.read()
@@ -653,10 +697,11 @@ while True:
                 aws_s3_response = aws_s3_client.get_object(Bucket = aws_info_bn, Key = '00_latest_software_vesion/latest_version.db')
                 update_info = json.loads(aws_s3_response["Body"].read())
 
-                if update_info['version'] != software_version:
-                    if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + software_version + '\n最新バージョン: v' + update_info['version'] + '\n\n最新バージョンをダウンロードしますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
+                if parse(update_info['version']) > parse(software_version[0]):
+                    update_info_all = update_info['version'] + update_info['version_space'] + update_info['version_prerelease']
+                    if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + version_all + '\n最新バージョン: v' + update_info_all + '\n\n最新バージョンをダウンロードしますか？', title = window_title, icon = icon_path, modal = True, keep_on_top = True) == 'Yes':
                         webbrowser.open(update_info['url'])
-                
+
                 else:
                     psg.popup_ok('お使いのMincarは最新バージョンです', title = window_title, icon = icon_path, modal = True, keep_on_top = True)
             

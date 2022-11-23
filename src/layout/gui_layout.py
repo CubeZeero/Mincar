@@ -43,9 +43,16 @@ class window_layout:
                 
                 ]
 
+        editkeyloss_btn_col = [
+
+                [self.psg.Button(image_data = icon_io_list[4], button_color = menu_button_bgcolor, key = '-menu_editkeyloss_btn-')],
+                [self.psg.Text(text = '編集キーの紛失', font = ['Meiryo',8])]
+                
+                ]
+
         setting_btn_col = [
 
-                [self.psg.Button(image_data = icon_io_list[4], button_color = menu_button_bgcolor, key = '-menu_setting_btn-')],
+                [self.psg.Button(image_data = icon_io_list[5], button_color = menu_button_bgcolor, key = '-menu_setting_btn-')],
                 [self.psg.Text(text = '設定', font = ['Meiryo',8])]
                 
                 ]
@@ -58,6 +65,7 @@ class window_layout:
                  self.psg.Column(download_btn_col, element_justification = 'center'),
                  self.psg.Column(edit_btn_col, element_justification = 'center'),
                  self.psg.Column(detail_btn_col, element_justification = 'center'),
+                 self.psg.Column(editkeyloss_btn_col, element_justification = 'center'),
                  self.psg.Column(setting_btn_col, element_justification = 'center')],
 
                 [self.psg.Text(text = window_title_raw + 'は同人音楽作品専用のカバーアートデータベースです', pad = ((0,0),(30,0)), key = '-announcement_text-')],
@@ -65,7 +73,7 @@ class window_layout:
                 
                 ]
 
-        return self.psg.Window(self.window_title, home_layout, icon = self.icon_path, size = (800,450), font = ['Meiryo',10], element_justification = 'c')
+        return self.psg.Window(self.window_title, home_layout, icon = self.icon_path, size = (900,450), font = ['Meiryo',10], element_justification = 'c')
 
     def lo_upload_disclist_window(self, disclist):
 
@@ -269,6 +277,32 @@ class window_layout:
 
         return self.psg.Window(self.window_title + ' - ディスクの詳細', detail_layout, icon = self.icon_path, size = (600,570), font = ['Meiryo',10], element_justification = 'c', modal = True)
 
+    def lo_editkeyloss_window(self):
+
+        editkeyloss_layout = [
+
+                [self.psg.Text(text = '編集キー紛失時用の確認フォーム', font = ['Meiryo',12], pad = ((0,0),(15,0)))],
+                [self.psg.Text(text = '編集キーを紛失、忘れた場合はこちらのフォームでお問い合わせください', font = ['Meiryo',8], pad = ((0,0),(10,0)))],
+
+                [self.psg.Text(text = '編集キーを設定したDiscID (必須)', font = ['Meiryo',8], pad = ((0,0),(40,0)))],
+                [self.psg.Input(default_text = '', size = (42,1), pad = ((0,0),(5,0)), key = '-ekl_discid_input-')],
+
+                [self.psg.Text(text = '編集キーを設定したタイトル (必須)', font = ['Meiryo',8], pad = ((0,0),(20,0)))],
+                [self.psg.Input(default_text = '', size = (42,1), pad = ((0,0),(5,0)), key = '-ekl_title_input-')],
+
+                [self.psg.Text(text = '編集キーを設定したカバーアートのタイプ', font = ['Meiryo',8], pad = ((0,0),(20,0)))],
+                [self.psg.Input(default_text = '', size = (42,1), pad = ((0,0),(5,0)), key = '-ekl_catype_input-')],
+
+                [self.psg.Text(text = 'メールアドレス (必須)', font = ['Meiryo',8], pad = ((0,0),(20,0)))],
+                [self.psg.Input(default_text = '', size = (42,1), pad = ((0,0),(5,0)), key = '-ekl_email_input-')],
+
+                [self.psg.Button(button_text = '送信', font = ['Meiryo',8], size = (12,1), pad = ((0,30),(40,0)), key = '-ok_btn-'),
+                 self.psg.Button(button_text = 'Cancel', font = ['Meiryo',8], size = (12,1), pad = ((0,0),(40,0)), key = '-cancel_btn-')]
+                
+                ]
+
+        return self.psg.Window(self.window_title + ' - ディスクの詳細', editkeyloss_layout, icon = self.icon_path, size = (600,450), font = ['Meiryo',10], element_justification = 'c', modal = True)
+    
     def lo_setting_window(self, window_title_raw, software_version, setting_menu_list, library_list, setting_theme_list, general_setting_dict):
 
         setting_general_frame = [
