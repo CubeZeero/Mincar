@@ -34,7 +34,7 @@ os.remove('build/util.py')
 os.remove('build/mincar_gui.py')
 os.remove('build/aws_info.py')
 os.remove('build/version.py')
-os.remove('build/mgun.py')
+os.remove('build/muuid.py')
 
 general_setting_dict = {
     'themename': 'Light',
