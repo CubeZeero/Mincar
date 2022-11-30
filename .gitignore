@@ -131,7 +131,7 @@ dmypy.json
 discid.dll
 aws_info.py
 test_pic.jpg
-version.py
+software_info.py
 tests/discid
 build
 tests
@@ -140,3 +140,4 @@ dist
 latest_version.db
 muuid.py
 mincar_blackuser_list.txt
+global_values.py

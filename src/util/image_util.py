@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 
-def keepAspectResizeToIo(Image, io, path, size):
+# Mincar
+# image_util.py
+# (C) 2022 Cube
+# cubezeero@gmail.com
+
+from PIL import Image, ImageOps
+import io
+
+def keepAspectResizeToIo(path, size):
 
     image = Image.open(path)
 
@@ -20,7 +28,7 @@ def keepAspectResizeToIo(Image, io, path, size):
     
     return bio.getvalue()
 
-def imageInvertColor(Image, ImageOps, io, im_path):
+def imageInvertColor(im_path):
     img_bytes = io.BytesIO()
 
     im = Image.open(im_path)
@@ -35,14 +43,10 @@ def imageInvertColor(Image, ImageOps, io, im_path):
 
     return img_bytes.getvalue()
 
-def imageToIo(Image, io, im_path):
+def imageToIo(im_path):
     img_bytes = io.BytesIO()
 
     im = Image.open(im_path)
     im.save(img_bytes, format = 'PNG')
 
     return img_bytes.getvalue()
-
-def info_text_update(window_name, text):
-    window_name['-announcement_text-'].update(value = text)
-    window_name.refresh()

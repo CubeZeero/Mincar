@@ -5,6 +5,11 @@
 # (C) 2022 Cube
 # cubezeero@gmail.com
 
+import sys
+sys.path.append('../')
+import util
+import global_values as gv
+
 def white(sg):
 
     white = {
@@ -40,3 +45,21 @@ def dark(sg):
     }
 
     return dark
+
+def theme_changer(theme_name):
+
+	if theme_name == 'white':
+		gv.menu_button_bgcolor = '#ffffff'
+		gv.input_disabled_color = '#eeeeee'
+
+		gv.default_ca = util.imageToIo('mincar_data/img/default_coverart.png')
+		for iconpath in gv.icon_path_list:
+			gv.icon_io_list.append(util.imageToIo(iconpath))
+
+	else:
+		gv.menu_button_bgcolor = '#222222'
+		gv.input_disabled_color = '#1e1e1e'
+
+		gv.default_ca = util.imageInvertColor('mincar_data/img/default_coverart.png')
+		for iconpath in gv.icon_path_list:
+			gv.icon_io_list.append(util.imageInvertColor(iconpath))
