@@ -5,12 +5,6 @@
 # (C) 2022 Cube
 # cubezeero@gmail.com
 
-#---------------------------------------------------------------------------------
-
-# Library
-
-#---------------------------------------------------------------------------------
-
 import global_values as gv
 
 import PySimpleGUI as psg
@@ -26,9 +20,7 @@ import util
 import function
 
 #---------------------------------------------------------------------------------
-
 # System init
-
 #---------------------------------------------------------------------------------
 
 aws_s3_client = boto3.client('s3', aws_access_key_id = aws_info.ACCESS_KEY(), aws_secret_access_key = aws_info.SECRET_ACCESS_KEY(), region_name = aws_info.REGION_NAME())
@@ -45,9 +37,7 @@ psg.theme('theme')
 if bool(gv.general_setting_dict['start_update_check']) : util.update_check_start(aws_s3_client)
 
 #---------------------------------------------------------------------------------
-
 # GUI Window
-
 #---------------------------------------------------------------------------------
 
 home_window = gui_layout.lo_home_window(gv.icon_io_list, gv.menu_button_bgcolor)
