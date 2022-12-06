@@ -63,3 +63,5 @@ def theme_changer(theme_name):
 		gv.default_ca = util.imageInvertColor('mincar_data/img/default_coverart.png')
 		for iconpath in gv.icon_path_list:
 			gv.icon_io_list.append(util.imageInvertColor(iconpath))
+	
+	return

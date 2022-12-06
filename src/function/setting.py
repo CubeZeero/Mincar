@@ -15,14 +15,15 @@ sys.path.append('../')
 import software_info
 import aws_info
 import global_values as gv
+import util
 
-def function_setting(aws_s3_client, gui_layout, general_setting_dict):
+def function_setting(aws_s3_client, gui_layout):
 
     setting_menu_list = ['一般', '情報']
     setting_theme_list = ['Light', 'Dark']
     library_list = 'boto3,pysimplegui,libdiscid,python-discid,pyperclip,pillow'
 
-    setting_window = gui_layout.lo_setting_window(software_info.Software_Name(), software_info.Version_Name(), setting_menu_list, library_list, setting_theme_list, general_setting_dict)
+    setting_window = gui_layout.lo_setting_window(software_info.Software_Name(), software_info.Version_Name(), setting_menu_list, library_list, setting_theme_list, gv.general_setting_dict)
 
     while True:
         setting_event, setting_values = setting_window.read()
@@ -31,18 +32,14 @@ def function_setting(aws_s3_client, gui_layout, general_setting_dict):
             
         if setting_event == '-listbox_menu-':
             for menuname in setting_menu_list:
-                if setting_values['-listbox_menu-'][0] == menuname:
-                    setting_window[menuname].update(visible = True)
-                else:
-                    setting_window[menuname].update(visible = False)
+                if setting_values['-listbox_menu-'][0] == menuname : setting_window[menuname].update(visible = True)
+                else : setting_window[menuname].update(visible = False)
 
         if setting_event == '-get_folder_btn-':
             coverart_path = psg.popup_get_folder(message = 'none', title = 'none', no_window = True, modal = True)
-
             if coverart_path != '' : setting_window['-get_folder_input-'].update(value = coverart_path)
             
-        if setting_event == '-homepage-':
-            webbrowser.open('https://github.com/CubeZeero/Mincar')
+        if setting_event == '-homepage-' : webbrowser.open('https://github.com/CubeZeero/Mincar')
         
         if setting_event == '-update_check_btn-':
             aws_s3_response = aws_s3_client.get_object(Bucket = aws_info.BUCKET_NAME(), Key = '00_latest_software_vesion/latest_version.db')
@@ -50,8 +47,7 @@ def function_setting(aws_s3_client, gui_layout, general_setting_dict):
 
             if parse(update_info['version']) > parse(software_info.Version_Name_List()[0]):
                 update_info_all = update_info['version'] + update_info['version_space'] + update_info['version_prerelease']
-                if psg.popup_yes_no('Mincarの新しいバージョンが利用可能です\n\n現在のバージョン: v' + software_info.Version_Name() + '\n最新バージョン: v' + update_info_all + '\n\n最新バージョンをダウンロードしますか？', title = software_info.Software_Name_All(), icon = software_info.Icon_Path(), modal = True, keep_on_top = True) == 'Yes':
-                    webbrowser.open(update_info['url'])
+                if psg.popup_yes_no(util.update_msg(update_info_all), title = software_info.Software_Name_All(), icon = software_info.Icon_Path(), modal = True, keep_on_top = True) == 'Yes' : webbrowser.open(update_info['url'])
             
             else:
                 psg.popup_ok('お使いのMincarは最新バージョンです', title = software_info.Software_Name_All(), icon = software_info.Icon_Path(), modal = True, keep_on_top = True)
@@ -77,3 +73,4 @@ def function_setting(aws_s3_client, gui_layout, general_setting_dict):
             break
 
     setting_window.close()
+    return

@@ -49,11 +49,11 @@ while True:
 
     if home_event == '-htu_btn-' : webbrowser.open('https://cubezeero.notion.site/cubezeero/Mincar-fa40bb8295074f67b9b6f8ffde1313e7')
 
-    if home_event == '-menu_upload_btn-' : function.function_upload(aws_s3_client, gui_layout, gv.input_disabled_color, gv.default_ca, gv.general_setting_dict['editkey'])
-    if home_event == '-menu_download_btn-' : function.function_download(aws_s3_client, gui_layout, gv.general_setting_dict['savefolder'])
-    if home_event == '-menu_edit_btn-' : function.function_edit(aws_s3_client, gui_layout, gv.general_setting_dict['editkey'])
-    if home_event == '-menu_detail_btn-' : function.function_discdetail(gui_layout)
+    if home_event == '-menu_upload_btn-'      : function.function_upload(aws_s3_client, gui_layout)
+    if home_event == '-menu_download_btn-'    : function.function_download(aws_s3_client, gui_layout)
+    if home_event == '-menu_edit_btn-'        : function.function_edit(aws_s3_client, gui_layout)
+    if home_event == '-menu_detail_btn-'      : function.function_discdetail(gui_layout)
     if home_event == '-menu_editkeyloss_btn-' : function.function_editkeylost(aws_s3_client, gui_layout)
-    if home_event == '-menu_setting_btn-' : function.function_setting(aws_s3_client, gui_layout, gv.general_setting_dict)
+    if home_event == '-menu_setting_btn-'     : function.function_setting(aws_s3_client, gui_layout)
 
 home_window.close()

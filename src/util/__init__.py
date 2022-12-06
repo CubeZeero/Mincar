@@ -10,6 +10,7 @@ from util.image_util import (
     imageToIo
 )
 from util.update_util import (
+    update_msg,
     update_check_start,
     update_check_setting
 )
