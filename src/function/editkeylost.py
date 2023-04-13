@@ -19,6 +19,13 @@ def function_editkeylost(aws_s3_client, gui_layout):
     if muuid.check_mbl(muuid.get_muuid(), aws_s3_client, aws_info.BUCKET_NAME()):
         psg.popup_ok('サーバ側からブロックされました', title = software_info.Software_Name_All(), icon = software_info.Icon_Path(), modal = True, keep_on_top = True)
         return
+
+    aws_s3_response = aws_s3_client.get_object(Bucket = aws_info.BUCKET_NAME(), Key = '03_maintenance/maintenance_info.db')
+    maintenance_info = json.loads(aws_s3_response["Body"].read())
+
+    if maintenance_info['maintenance'] == 1:
+        psg.popup_ok(maintenance_info['info_massage'], title = software_info.Software_Name_All(), icon = software_info.Icon_Path(), modal = True, keep_on_top = True)
+        return
         
     editkeyloss_window = gui_layout.lo_editkeyloss_window()
 

@@ -30,7 +30,10 @@ def update_check_start(aws_s3_client):
         if psg.popup_yes_no(update_msg(update_info_all), title = software_info.Software_Name_All(), icon = software_info.Icon_Path(), modal = True, keep_on_top = True) == 'Yes':
             webbrowser.open(update_info['url'])
     
-    return
+    if parse(update_info['min_version']) > parse(software_info.Version_Name_List()[0]):
+        return 1, update_info['url']
+    else:
+        return 0, None
 
 def update_check_setting(aws_s3_client):
 

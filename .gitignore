@@ -141,3 +141,6 @@ latest_version.db
 muuid.py
 mincar_blackuser_list.txt
 global_values.py
+aws_info_sample.py
+maintenance_info.db
+software_info_sample.py
